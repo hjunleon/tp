@@ -14,6 +14,7 @@ public class UnitGood {
     private Float baseArea;
     private Float volume;
     private Boolean isPerishable;
+
     public UnitGood(String SKU,
                     String name,
                     String description,
@@ -22,7 +23,7 @@ public class UnitGood {
                     Boolean isUnitWhole,
                     Float baseArea,
                     Float volume,
-                    Boolean isPerishable){
+                    Boolean isPerishable) {
 
         this.SKU = SKU;
         this.name = name;
@@ -36,11 +37,11 @@ public class UnitGood {
 
     }
 
-    public String getSummary(){
+    public String getSummary() {
         return String.format("%s: %s\n" +
-                "Cost: $%.2f/%s",
-                    name,description,unitPrice, unitQuantity
-                );
+                        "Cost: $%.2f/%s",
+                name, description, unitPrice, unitQuantity
+        );
     }
 
     public String getDescription() {
@@ -52,21 +53,21 @@ public class UnitGood {
     }
 
     public String toString() {
-        return String.format("%d - %s (%s)",id, name, description);
+        return String.format("%d - %s (%s)", id, name, description);
     }
 
-    public JSONObject serialize(){
+    public JSONObject serialize() {
         JSONObject jo = new JSONObject();
-        jo.put(UnitGoodKeys.id,this.id);
-        jo.put(UnitGoodKeys.name,this.name);
-        jo.put(UnitGoodKeys.SKU,this.SKU);
-        jo.put(UnitGoodKeys.description,this.description);
-        jo.put(UnitGoodKeys.unitPrice,this.unitPrice);
-        jo.put(UnitGoodKeys.unitQuantity,this.unitQuantity);
-        jo.put(UnitGoodKeys.isUnitWhole,this.isUnitWhole);
-        jo.put(UnitGoodKeys.baseArea,this.baseArea);
-        jo.put(UnitGoodKeys.volume,this.volume);
-        jo.put(UnitGoodKeys.isPerishable,this.isPerishable);
+        jo.put(UnitGoodKeys.id, this.id);
+        jo.put(UnitGoodKeys.name, this.name);
+        jo.put(UnitGoodKeys.SKU, this.SKU);
+        jo.put(UnitGoodKeys.description, this.description);
+        jo.put(UnitGoodKeys.unitPrice, this.unitPrice);
+        jo.put(UnitGoodKeys.unitQuantity, this.unitQuantity);
+        jo.put(UnitGoodKeys.isUnitWhole, this.isUnitWhole);
+        jo.put(UnitGoodKeys.baseArea, this.baseArea);
+        jo.put(UnitGoodKeys.volume, this.volume);
+        jo.put(UnitGoodKeys.isPerishable, this.isPerishable);
         return jo;
     }
 

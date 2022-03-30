@@ -36,34 +36,34 @@ public class UserInterface {
             try {
                 String command = userInput.split(" ")[0];
                 switch (command) {
-                case "view":
-                    //using flags here to distinguish between different views????
-                    viewParser.parse(userInput);
-                    break;
-                case "find":
-                    findParser.parse(userInput);
-                    break;
-                case "list":
-                    listParser.parse(userInput);
-                    break;
-                case "add":
-                    addParser.parse(userInput);
-                    break;
-                case "remove":
-                    removeParser.parse(userInput);
-                    break;
-                case "total":
-                    totalParser.parse(userInput);
-                    break;
-                case "help":
-                    Display.help();
-                    break;
-                case "storage-capacity":
-                    warehouse.getPercentOccupied();
-                    break;
-                default:
-                    //error exception here
-                    throw new WrongCommandException("", false);
+                    case "view":
+                        //using flags here to distinguish between different views????
+                        viewParser.parse(userInput);
+                        break;
+                    case "find":
+                        findParser.parse(userInput);
+                        break;
+                    case "list":
+                        listParser.parse(userInput);
+                        break;
+                    case "add":
+                        addParser.parse(userInput);
+                        break;
+                    case "remove":
+                        removeParser.parse(userInput);
+                        break;
+                    case "total":
+                        totalParser.parse(userInput);
+                        break;
+                    case "help":
+                        Display.help();
+                        break;
+                    case "storage-capacity":
+                        warehouse.getPercentOccupied();
+                        break;
+                    default:
+                        //error exception here
+                        throw new WrongCommandException("", false);
                 }
             } catch (WrongCommandException wrongCommandException) {
                 if (wrongCommandException.isCommand()) {
@@ -80,7 +80,7 @@ public class UserInterface {
                 Display.tryCommandAgain();
             } catch (InvalidFileException e) {
                 e.printStackTrace();
-            } catch (InvalidObjectType e){
+            } catch (InvalidObjectType e) {
                 Display.tryCommandAgain();
             }
             System.out.println("Another command?");

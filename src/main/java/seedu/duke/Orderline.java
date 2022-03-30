@@ -10,23 +10,23 @@ import seedu.duke.JsonKeyConstants.OrderlinesKeys;
  * FOR NOW id we can manually input?
  * Ideas - id can track and give to the goods we add automatically
  */
-public class Orderline extends Good{
+public class Orderline extends Good {
     private int quantityFulfilled = 0;
     private Boolean isCheckedOff = false;
 //    private Good good;
 
     public Orderline(String SKU, String name, String description, Float unitPrice, String unitItem,
-                Boolean isUnitWhole, Float baseArea, Float volume, Boolean isPerishable,
-                Float quantity
+                     Boolean isUnitWhole, Float baseArea, Float volume, Boolean isPerishable,
+                     Float quantity
     ) {
         super(SKU, name, description, unitPrice, unitItem, isUnitWhole, baseArea, volume, isPerishable, quantity);
     }
 
-    public void checkOff(){
+    public void checkOff() {
         this.isCheckedOff = true;
     }
 
-    public int getQuantityFulfilled(){
+    public int getQuantityFulfilled() {
         return quantityFulfilled;
     }
 
@@ -44,8 +44,8 @@ public class Orderline extends Good{
 
     public JSONObject serialize() {
         JSONObject jo = super.serialize();
-        jo.put(OrderlinesKeys.isCheckedOff,this.isCheckedOff);
-        jo.put(OrderlinesKeys.quantityFulfilled,this.quantityFulfilled);
+        jo.put(OrderlinesKeys.isCheckedOff, this.isCheckedOff);
+        jo.put(OrderlinesKeys.quantityFulfilled, this.quantityFulfilled);
         return jo;
     }
 

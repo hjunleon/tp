@@ -20,7 +20,7 @@ public class Order {
     private Boolean isFulfilled = false;
     private String comments;
 
-    public Order(int orderId, String receiver, String shippingAddress, String toFulfilBy,  String comments) {
+    public Order(int orderId, String receiver, String shippingAddress, String toFulfilBy, String comments) {
         this.orderId = orderId;
         this.receiver = receiver;
         this.shippingAddress = shippingAddress;
@@ -44,17 +44,18 @@ public class Order {
         return orderlines;
     }
 
-    public Orderline getOrderline(int orderlineId){
+    public Orderline getOrderline(int orderlineId) {
 //        Orderline toRet = null;
-        for (Orderline ol : orderlines){
-            if (orderlineId == ol.getId()){
+        for (Orderline ol : orderlines) {
+            if (orderlineId == ol.getId()) {
                 return ol;
-            };
+            }
+            ;
         }
         return null;
     }
 
-    public void addOrderline(){
+    public void addOrderline() {
 
     }
 
@@ -109,23 +110,23 @@ public class Order {
 
     /**
      * FOR DEV ONLY
+     *
      * @param orderlineId
      */
-    public void removeOrderline(int orderlineId){
-        for (int idx = 0; idx < orderlines.size(); idx++){
-            if (orderlineId == orderlines.get(idx).getId()){
+    public void removeOrderline(int orderlineId) {
+        for (int idx = 0; idx < orderlines.size(); idx++) {
+            if (orderlineId == orderlines.get(idx).getId()) {
                 orderlines.remove(idx);
                 return;
             }
         }
     }
 
-    public void checkOffOrderline(int orderlineId){
+    public void checkOffOrderline(int orderlineId) {
         Orderline curOrderline = getOrderline(orderlineId);
         if (curOrderline == null) return;
         curOrderline.checkOff();
     }
-
 
 
     // Function to print grammar for statements to print
@@ -136,7 +137,6 @@ public class Order {
             return "are ";
         }
     }
-
 
 
     private void removeOrderlineByQtyHelper(int id, int qty)
@@ -204,33 +204,33 @@ public class Order {
 //    }
 
 
-    public String getToFulfilBy(){
+    public String getToFulfilBy() {
         return this.toFulfilBy;
     }
 
 
-    public String getFulfilledBy(){
+    public String getFulfilledBy() {
         return this.fulfilledBy;
     }
 
-    public void setFulfilledBy(String fulfilledBy){
+    public void setFulfilledBy(String fulfilledBy) {
         this.fulfilledBy = fulfilledBy;
     }
 
-    public String getComments(){
+    public String getComments() {
         return this.comments;
     }
 
-    public void setComments(String comments){
+    public void setComments(String comments) {
         this.comments = comments;
     }
 
-    public void addToComments(String comments){
+    public void addToComments(String comments) {
         this.comments += '\n';
         this.comments += comments;
     }
 
-    public Float getTotalCost(){
+    public Float getTotalCost() {
         return this.totalCost;
     }
 
@@ -239,16 +239,16 @@ public class Order {
     }
 
 
-    private JSONArray serializeOrderlines(){
+    private JSONArray serializeOrderlines() {
         JSONArray ja = new JSONArray();
-        for (Orderline ol : this.orderlines){
+        for (Orderline ol : this.orderlines) {
             JSONObject jo = ol.serialize();
             ja.add(jo);
         }
         return ja;
     }
 
-    public JSONObject serialize(){
+    public JSONObject serialize() {
         JSONObject jo = new JSONObject();
         jo.put(OrderKeys.orderId, this.orderId);
         jo.put(OrderKeys.receiver, this.receiver);
@@ -259,7 +259,7 @@ public class Order {
         jo.put(OrderKeys.isFulfilled, this.isFulfilled);
         jo.put(OrderKeys.comments, this.comments);
         JSONArray ja_ol = this.serializeOrderlines();
-        if (ja_ol == null){
+        if (ja_ol == null) {
             return null;
         }
         jo.put(OrderKeys.orderlines, this.orderlines);

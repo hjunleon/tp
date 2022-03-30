@@ -4,18 +4,19 @@ import seedu.duke.Regex;
 import seedu.duke.Warehouse;
 import util.exceptions.WrongCommandException;
 
-public class ListParser extends CommandParser{
+public class ListParser extends CommandParser {
     public ListParser(Warehouse warehouse) {
         super(warehouse);
     }
 
-    protected void init_extract_params(){
+    protected void init_extract_params() {
         Regex regexMatch;
         String regex;
         regex = "(?<flag>[og])/";
         regexMatch = new Regex(this.userInput, regex);
         this.matches = regexMatch.getGroupValues();
-    };
+    }
+
     protected void extract_params() throws WrongCommandException {
         if (matches.get("flag").equals("o")) {
             // list orders with flag "o/"
@@ -27,5 +28,7 @@ public class ListParser extends CommandParser{
             // wrong command exception
             throw new WrongCommandException("list", true);
         }
-    };
+    }
+
+    ;
 }

@@ -26,12 +26,10 @@ public class Warehouse {
 
     public Warehouse(Integer capacity) {
         this.totalCapacity = (float) capacity;
-//        setupJSONConstants();
     }
 
     public Warehouse(Float capacity) {
         this.totalCapacity = capacity;
-//        setupJSONConstants();
     }
 
     public boolean isSKUInInventory(String SKU) {
@@ -100,18 +98,6 @@ public class Warehouse {
 
     public void viewGoodBySKU(String SKU) {
         try {
-//            Integer idToBeViewed = Integer.parseInt(SKU);
-//            for (Order order : orderLists) {
-//                for (Orderline orderline : order.getOrderlines()) {
-//                    if (idToBeViewed.equals(orderline.getId())) {
-//                        System.out.println("Viewing item with id " + orderline.getId());
-//                        System.out.println("Item name: " + orderline.getName());
-//                        System.out.println("Item description: " + orderline.getDescription());
-//                        System.out.println("Item quantity: " + orderline.getQuantity());
-//                        return;
-//                    }
-//                }
-//            }
             if (isSKUInInventory(SKU)) {
                 Good curGood = getInventoryGoodBySKU(SKU);
                 System.out.println("Viewing item with SKU " + SKU);

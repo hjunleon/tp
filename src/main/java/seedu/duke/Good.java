@@ -46,13 +46,9 @@ public class Good extends UnitGood {
 
     public JSONObject serialize() {
         JSONObject jo = super.serialize();
-        jo.put(GoodKeys.quantity,this.quantity);
+        jo.put(GoodKeys.quantity, this.quantity);
         return jo;
     }
-
-
-
-
 
 
 //    public UnitGood assignUnitGood(

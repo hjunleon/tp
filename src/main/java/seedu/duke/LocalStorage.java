@@ -21,35 +21,36 @@ public class LocalStorage {
 
     /**
      * Opens and reads file at SAVE_PATH
+     *
      * @return saveStr the JSON string from save file
      */
-    public String readSaveFile(){
+    public String readSaveFile() {
         String saveStr = null;
         try {
             FileReader fr = new FileReader(SAVE_PATH);
             int i;
-            while ((i=fr.read()) != -1){
-                saveStr += ((char)i);
+            while ((i = fr.read()) != -1) {
+                saveStr += ((char) i);
             }
 //            System.out.println(saveStr);
             fr.close();
-        } catch (IOException e){
+        } catch (IOException e) {
             System.err.println("Failed to open save file!" + e.getMessage() + "\n");
         }
         return saveStr;
     }
 
-    public static String readSaveFile(String filePath){
+    public static String readSaveFile(String filePath) {
         String saveStr = null;
         try {
             FileReader fr = new FileReader(filePath);
             int i;
-            while ((i=fr.read()) != -1){
-                saveStr += ((char)i);
+            while ((i = fr.read()) != -1) {
+                saveStr += ((char) i);
             }
 //            System.out.println(saveStr);
             fr.close();
-        } catch (IOException e){
+        } catch (IOException e) {
             System.err.println("Failed to open save file!" + e.getMessage() + "\n");
         }
         return saveStr;
@@ -58,27 +59,7 @@ public class LocalStorage {
     /**
      * Opens and writes serialised string versino of tasklist to file at SAVE_PATH
      */
-    public void writeSaveFile(String storeStr){
-        Path dir = Paths.get(OUT_DIR);
-//        File f = new File(OUT_DIR);
-        if (!Files.exists(dir)) {   //createTempDirectory
-            try {
-                Files.createDirectory(Path.of(OUT_DIR));
-            } catch (IOException e) {
-                System.err.println("Failed to create directory!" + e.getMessage());
-            }
-        }
-//        String filePath = String.format("%s/%s", OUT_DIR, "SAVE.json");
-        try {
-            FileWriter fw = new FileWriter(SAVE_PATH);
-            fw.write(storeStr);
-            fw.close();
-        } catch (IOException e) {
-            System.err.println("Failed to write to save file!" + e.getMessage());
-        }
-
-    }
-    public static void writeSaveFile(String storeStr, String filePath){
+    public void writeSaveFile(String storeStr) {
         Path dir = Paths.get(OUT_DIR);
 //        File f = new File(OUT_DIR);
         if (!Files.exists(dir)) {   //createTempDirectory
@@ -99,7 +80,28 @@ public class LocalStorage {
 
     }
 
-    public static String json2str(JSONObject jo){
+    public static void writeSaveFile(String storeStr, String filePath) {
+        Path dir = Paths.get(OUT_DIR);
+//        File f = new File(OUT_DIR);
+        if (!Files.exists(dir)) {   //createTempDirectory
+            try {
+                Files.createDirectory(Path.of(OUT_DIR));
+            } catch (IOException e) {
+                System.err.println("Failed to create directory!" + e.getMessage());
+            }
+        }
+//        String filePath = String.format("%s/%s", OUT_DIR, "SAVE.json");
+        try {
+            FileWriter fw = new FileWriter(SAVE_PATH);
+            fw.write(storeStr);
+            fw.close();
+        } catch (IOException e) {
+            System.err.println("Failed to write to save file!" + e.getMessage());
+        }
+
+    }
+
+    public static String json2str(JSONObject jo) {
         return jo.toString();
     }
 
