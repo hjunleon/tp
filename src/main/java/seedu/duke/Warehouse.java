@@ -9,6 +9,7 @@ import util.exceptions.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Warehouse {
     private Float capacityOccupied = 0F;
@@ -123,6 +124,24 @@ public class Warehouse {
 
         } catch (NumberFormatException e) {
             System.out.println("Invalid format entered! Check format and try again!");
+        }
+    }
+
+    public void findGoods(String name) {
+        AtomicInteger counter = new AtomicInteger();
+        inventory.forEach((SKU, good) -> {
+            if (good.getName().toLowerCase().contains(name.toLowerCase())) {
+                System.out.println("Viewing item with SKU " + SKU);
+                System.out.println("Item name: " + good.getName());
+                System.out.println("Item description: " + good.getDescription());
+                System.out.println("Item quantity: " + good.getQuantity());
+                System.out.println("");
+                counter.getAndIncrement();
+            }
+        });
+
+        if (counter.get() == 0) {
+            System.out.println("Could not find any item containing " + name + " in the inventory!");
         }
     }
 
