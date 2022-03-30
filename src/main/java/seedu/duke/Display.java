@@ -37,7 +37,29 @@ public class Display {
 //    }
 
 
+    // Prompts
+
+    public static void warehouseInitPrompt(){
+        System.out.println("New login. Please type the total number of goods"
+                + " your warehouse can hold");
+    }
+
+    // process output
+    public static void tryRestoreWarehouseState(){
+        System.out.println("Attempt to restore warehouse state from savefile");
+    }
+
+    // state output
+    public static void warehouseCapacity(String capacity){
+        System.out.printf("Current Warehouse capacity is %d m3\n", capacity );
+    }
+
     // successful output
+
+    public static void orderAdded(String id){
+        System.out.println("Order " + id + " is added");
+    }
+
     public static void inventoryGoodQtyRemoved(Float qty, String goodName) {
         System.out.println(qty + " of " + goodName + " has been removed.");
     }
@@ -47,12 +69,17 @@ public class Display {
     }
 
 
+
     public static void displayStorageCapacity(Float percentageCapacity) {
         System.out.println("Storage capacity: " + percentageCapacity + '%');
     }
 
     public static void warehouseStateSaved(String filepath) {
         System.out.println("Warehouse information succesfully stored in " + filepath);
+    }
+
+    public static void warehouseStateRestored(){
+        System.out.println("Warehouse state successfully restored!");
     }
 
     // error outputs
@@ -66,6 +93,14 @@ public class Display {
                 + "Please enter the command again with a smaller quantity.");
     }
 
+    public static void capacityOccupiedInvalid(){
+        System.out.println("Occupied capacity provided is invalid");
+    }
+
+    public static void totalCapacityInvalid(){
+        System.out.println("Total capacity provided is invalid");
+    }
+
     // exception outputs
     public static void goodDontExistException() {
         System.out.println("This type of Good you are trying to remove does not exist.\n"
@@ -75,6 +110,23 @@ public class Display {
     public static void serializeException(String obj) {
         System.out.println("The following " + obj + " has trouble serializing."); // perhaps reattempt reserializing?
     }
+
+    public static void largeQuantityException(String a, String b){
+        System.out.println(a + " shouldn't exceed " + b);
+    }
+
+    public static void jsonParseException(String fp){
+        System.out.println("File: " + fp + " is not a valid json file.");
+    }
+
+    public static void numberFormatException(){
+        System.out.println("Number formatting invalid");
+    }
+
+    public static void numberFormatException(String val, String type){
+        System.out.println(val + " can't be intrepreted as type " + type);
+    }
+
 
 
     // Command related

@@ -3,7 +3,10 @@ package seedu.duke;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.json.simple.parser.ParseException;
+import seedu.duke.JsonKeyConstants.OrderKeys;
 import seedu.duke.JsonKeyConstants.WarehouseKeys;
+import seedu.duke.ObjectFactories.OrderFactory;
 import util.exceptions.*;
 
 import java.util.ArrayList;
@@ -24,13 +27,13 @@ public class Warehouse {
 //
 //    }
 
-    public Warehouse(Integer capacity) {
-        this.totalCapacity = (float) capacity;
-    }
-
-    public Warehouse(Float capacity) {
-        this.totalCapacity = capacity;
-    }
+//    public Warehouse(Integer capacity) {
+//        this.totalCapacity = (float) capacity;
+//    }
+//
+//    public Warehouse(Float capacity) {
+//        this.totalCapacity = capacity;
+//    }
 
     public boolean isSKUInInventory(String SKU) {
         return inventory.containsKey(SKU);
@@ -40,33 +43,56 @@ public class Warehouse {
         return inventory.get(SKU);
     }
 
+    public Float getTotalCapacity(){
+        return this.totalCapacity;
+    }
+
     public Float getCapacityOccupied() {
         return capacityOccupied;
     }
 
     public void getPercentOccupied() {
-        Float totalGoods = totalInventoryVol();
-        Float warehouseCapacity = getCapacityOccupied();
+        Float totalGoods = getCapacityOccupied();
+        Float warehouseCapacity = getTotalCapacity();
         Float percentageCapacity = (totalGoods / warehouseCapacity) * 100;
         Display.displayStorageCapacity(percentageCapacity);
     }
 
-    public boolean setCapacity(String input) {
+    public boolean setTotalCapacity(Float capacity) {
         try {
-            Float capacity = Float.parseFloat(input);//Integer.parseInt(input);
+//            Float capacity = Float.parseFloat(input);//Integer.parseInt(input);
             assert capacity > 0;
 
-            if (capacity < totalInventoryVol()) {
+            if (capacity < this.getCapacityOccupied()) {
+                throw new LargeQuantityException();
+            }
+            this.totalCapacity = capacity;
+            Display.warehouseCapacity(capacity.toString());
+            return true;
+        } catch (LargeQuantityException largeQuantityException) {
+//            System.out.println("Current total goods in the warehouse is more"
+//                    + " than input capacity");
+            Display.largeQuantityException("Capacity occupied", "total capacity");
+        } catch (NumberFormatException numberFormatException) {
+//            System.out.println("Please set the Warehouse capacity again.");
+            Display.totalCapacityInvalid();
+        }
+        return false;
+    }
+
+    public boolean setCapacityOccupied(Float capacity){
+        try {
+//            Float capacity = Float.parseFloat(input);
+            assert capacity >= 0;
+            if (capacity > this.getTotalCapacity()){
                 throw new LargeQuantityException();
             }
             this.capacityOccupied = capacity;
-            System.out.printf("Current Warehouse capacity is %d\n", capacity);
             return true;
-        } catch (LargeQuantityException largeQuantityException) {
-            System.out.println("Current total goods in the warehouse is more"
-                    + " than input capacity");
+        } catch (LargeQuantityException e){
+            Display.largeQuantityException("Capacity occupied", "total capacity");
         } catch (NumberFormatException numberFormatException) {
-            System.out.println("Please set the Warehouse capacity again.");
+            Display.capacityOccupiedInvalid();
         }
         return false;
     }
@@ -163,30 +189,13 @@ public class Warehouse {
         }
     }
 
-    public Float totalInventoryVol() {   //should be float
-        Float total = 0f;
-        for (Order order : orderLists) {
-            for (Orderline orderline : order.getOrderlines()) {
-                total += orderline.getQuantity();
-            }
-        }
-        return total;
-    }
-
-    public Float inventoryVolLeft() {
-        return 0f;
-    }
-
-    public Float percentageInvVolLeft() {
-        return 0f;
-    }
 
     public int totalOrder() {
         return orderLists.size();
     }
 
 
-    public Order findOrder(int orderId) throws ItemDoesNotExistException {
+    public Order findOrder(String orderId) throws ItemDoesNotExistException {
         for (Order order : orderLists) {
             if (order.getId() == orderId) {
                 return order;
@@ -312,37 +321,51 @@ public class Warehouse {
         }
     }
 
-    private void addOrder(int id, Object orderObject) throws WrongCommandException, InvalidFileException, InvalidObjectType {
-        String receiver = null;
-        String shippingAddress = null;
-        String toFulfilBy = null;
-        String comments = null;
-        if (orderObject instanceof JSONObject) {
-            JSONObject jOrderObject = (JSONObject) orderObject;
-        } else if (orderObject instanceof Map) {
-            Map orderMap = (Map) orderObject;
-        } else {
-            throw new InvalidObjectType("Order should either be JSONObject or Map type");
+    private Boolean addOrder(Object orderObject) throws WrongCommandException, InvalidFileException, InvalidObjectType {
+        Order order = OrderFactory.formOrder(orderObject);
+        if (order == null){
+            return false;
         }
-
-        try {
-            Order order = new Order(id, receiver, shippingAddress, toFulfilBy, comments);
-            orderLists.add(order);
-            System.out.println("Order " + id + " is added");
-        } catch (NumberFormatException e) {
-            throw new WrongCommandException("add", true);
-        }
+        orderLists.add(order);
+        Display.orderAdded(order.getId());
+        return true;
     }
 
-    public void batchSetOrders(String filePath) throws WrongCommandException, InvalidFileException, InvalidObjectType {
-        String saveStr = LocalStorage.readSaveFile(filePath);
+    public Boolean batchSetOrders(String fp) throws WrongCommandException, InvalidFileException, InvalidObjectType {
+        String saveStr = LocalStorage.readSaveFile(fp);
         // READ JSON FILE
-        JSONArray json_orders = (JSONArray) JSONValue.parse(saveStr);
-        int idx = 0;
-        for (Object orderObject : json_orders) {
-            addOrder(idx, orderObject);
-            idx += 1;
+        try {
+            JSONArray json_orders = (JSONArray) JSONValue.parseWithException(saveStr);
+            Boolean status = populateOrdersJson(json_orders);
+            if (!status){
+                return false;
+            }
+        } catch (ParseException e){
+            Display.jsonParseException(fp);
+            return false;
         }
+
+        return true;
+
+    }
+
+    public Boolean populateOrdersJson(JSONArray json_orders){
+        Integer idx = 0; // incase there's no order id in json
+        for (Object o : json_orders) {
+            Boolean status =  addOrder(o);
+
+            if ( o instanceof JSONObject) {
+                JSONObject jo = (JSONObject)o;
+                String orderId = (String)jo.get(OrderKeys.orderId);
+                if (orderId.isBlank()){
+                    orderId = idx.toString();
+                }
+                idx += 1;
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void removeOrder(String id) throws WrongCommandException {
@@ -351,8 +374,8 @@ public class Warehouse {
         }
 
         try {
-            int orderId = Integer.parseInt(id);
-            orderLists.remove(findOrder(orderId));
+//            int orderId = Integer.parseInt(id);
+            orderLists.remove(findOrder(id));
             System.out.println("Order " + id + " has been removed.");
         } catch (ItemDoesNotExistException e1) {
             System.out.println("The order you are trying to remove are not on the current list. "
@@ -360,6 +383,11 @@ public class Warehouse {
         } catch (NumberFormatException e2) {
             throw new WrongCommandException("remove", true);
         }
+    }
+
+    public Boolean setInventoryTypeCount(int cnt){
+        this.inventoryTypeCount = cnt;
+        return true;
     }
 
 
@@ -388,6 +416,19 @@ public class Warehouse {
         return ja;
     }
 
+    private JSONObject serializeInventory() {
+        JSONObject jo = new JSONObject();
+
+        for (Map.Entry<String, Good> entry : inventory.entrySet()) {
+            String key = entry.getKey();
+            Good value = entry.getValue();
+            JSONObject jGood = value.serialize();
+            jo.put(key, jGood);
+        }
+
+        return jo;
+    }
+
     private JSONObject serialize() {
         JSONObject warehouse = new JSONObject();
 
@@ -399,9 +440,75 @@ public class Warehouse {
             return null;
         }
         warehouse.put(WarehouseKeys.orderLists, s_ol);
+        JSONObject jInventory = this.serializeInventory();
 
+        warehouse.put(WarehouseKeys.inventory, jInventory);
         return warehouse;
     }
+
+    public Boolean restoreWarehouseState(){
+        // READ JSON FILE
+        String fp = LocalStorage.WAREHOUSE_PATH;
+        String saveStr = LocalStorage.readSaveFile(fp);
+        if (saveStr == null){return false;}
+        // PARSE
+        try{
+            JSONObject jWarehouse = (JSONObject) JSONValue.parseWithException(saveStr);
+            boolean status = false;
+            Float totalCapacity = Float.parseFloat((String)jWarehouse.get(WarehouseKeys.totalCapacity));
+            status = this.setTotalCapacity(totalCapacity);
+            if (!status){
+                return false;
+            }
+
+            Float capacityOccupied = Float.parseFloat((String)jWarehouse.get(WarehouseKeys.capacityOccupied));
+            status = this.setCapacityOccupied(capacityOccupied);
+            if (!status){
+                return false;
+            }
+
+            Integer inventoryTypeCount = Integer.parseInt((String)jWarehouse.get(WarehouseKeys.inventoryTypeCount));
+            status = this.setInventoryTypeCount(inventoryTypeCount);
+            if (!status){
+                return false;
+            }
+
+
+
+
+        } catch (ParseException e) {
+            Display.jsonParseException(fp);
+            return false;
+        } catch (NumberFormatException e){
+            Display.numberFormatException();
+            Display.jsonParseException(fp);
+            return false;
+        }
+
+
+
+        return true;
+    }
+
+
+
+//    public Float totalInventoryVol() {   //should be float
+//        Float total = 0f;
+//        for (Order order : orderLists) {
+//            for (Orderline orderline : order.getOrderlines()) {
+//                total += orderline.getQuantity();
+//            }
+//        }
+//        return total;
+//    }
+//
+//    public Float inventoryVolLeft() {
+//        return this.getTotalCapacity() - this.getCapacityOccupied();
+//    }
+//
+//    public Float percentageInvVolLeft() {
+//        return 0f;
+//    }
 
 }
 

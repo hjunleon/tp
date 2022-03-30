@@ -10,7 +10,7 @@ import util.exceptions.WrongCommandException;
 import java.util.ArrayList;
 
 public class Order {
-    private int orderId;
+    private String orderId;
     private String receiver;
     private String shippingAddress;
     private ArrayList<Orderline> orderlines = new ArrayList<>();
@@ -20,7 +20,7 @@ public class Order {
     private Boolean isFulfilled = false;
     private String comments;
 
-    public Order(int orderId, String receiver, String shippingAddress, String toFulfilBy, String comments) {
+    public Order(String orderId, String receiver, String shippingAddress, String toFulfilBy, String comments) {
         this.orderId = orderId;
         this.receiver = receiver;
         this.shippingAddress = shippingAddress;
@@ -28,7 +28,22 @@ public class Order {
         this.comments = comments;
     }
 
-    public int getId() {
+    public Order(String orderId,  String receiver, String shippingAddress, ArrayList<Orderline> orderlines,
+                 Float totalCost, String toFulfilBy, String fulfilledBy, Boolean isFulfilled,
+                 String comments
+    ){
+        this.orderId = orderId;
+        this.receiver = receiver;
+        this.shippingAddress = shippingAddress;
+        this.orderlines = orderlines;
+        this.totalCost = totalCost;
+        this.toFulfilBy = toFulfilBy;
+        this.fulfilledBy = fulfilledBy;
+        this.isFulfilled = isFulfilled;
+        this.comments = comments;
+    }
+
+    public String getId() {
         return orderId;
     }
 

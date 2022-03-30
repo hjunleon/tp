@@ -86,6 +86,11 @@ public class UserInterface {
             System.out.println("Another command?");
             userInput = input.nextLine();
         }
+
+
+        // Save warehouse state
+        warehouse.saveWarehouseState();
+
     }
 
 }

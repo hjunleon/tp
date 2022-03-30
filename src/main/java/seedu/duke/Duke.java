@@ -21,15 +21,26 @@ public class Duke {
         // boolean isSaveFileLoaded = hasSaveFileLoad();
 
         hello();
+        Warehouse w = new Warehouse();
+        Display.tryRestoreWarehouseState();
+
         if (false) {
             // load save file;
             // int capacity = 0;
             // welcome user back;
             // ui = new UserInterface(new Warehouse(capacity));
         } else {
-            System.out.println("New login. Please type the total number of goods"
-                    + " your warehouse can hold");
-            ui = new UserInterface(new Warehouse(1000F));
+            Boolean restoreStatus = false;
+            restoreStatus = w.restoreWarehouseState();
+            if (!restoreStatus){
+                Display.warehouseInitPrompt();
+                w = new Warehouse();
+                w.setTotalCapacity(1000f);
+            } else {
+                // SUCCESS
+                Display.warehouseStateRestored();
+            }
+            ui = new UserInterface(w);
         }
         ui.run();
         bye();
