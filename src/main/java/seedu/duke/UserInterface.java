@@ -10,14 +10,11 @@ import java.util.Scanner;
 
 public class UserInterface {
     private Warehouse warehouse;
-
     private ListParser listParser;
     private ViewParser viewParser;
     private AddParser addParser;
     private RemoveParser removeParser;
     private TotalParser totalParser;
-
-
     public UserInterface(Warehouse warehouse) {
         this.warehouse = warehouse;
         this.listParser = new ListParser(warehouse);
@@ -26,18 +23,6 @@ public class UserInterface {
     public void run() {
         Scanner input = new Scanner(System.in);
         String userInput = input.nextLine();
-
-
-        // setting Warehouse capacity
-        /*
-        boolean isSet = false;
-        do {
-            Regex capacity = new Regex(userInput, "(?<cap>\\d*)");
-            isSet = warehouse.setCapacity(capacity.getGroupValues().get("cap"));
-            userInput = input.nextLine();
-        } while (!isSet);
-        */
-
         while (!userInput.equals("bye")) {
             // current implementation is just take 1st value for command
             try {
